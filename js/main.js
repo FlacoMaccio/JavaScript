@@ -7,7 +7,7 @@ $.getJSON("data/data.json", function(datos, estado){
 function crearComponente (servicio){
     return(`
                                     <div class="card mb-3">
-                                    <img src="${servicio.imagen}." class="card-img-top" ;>
+                                    <img src="${servicio.imagen}" class="card-img-top" ;>
                                     <div class="card-body">
                                         <h5 class="card-title">${servicio.nombre}</h5>
                                         <p class="card-text">${servicio.descripcion}</p>
