@@ -1,6 +1,5 @@
 let listaServicios = [];
 let seleccionados= [];
-
 const data = "https://raw.githubusercontent.com/FlacoMaccio/JavaScript/main/data/data.json"
 $(document).ready(function () {
   $.getJSON(data, function (datos, estado) {
@@ -23,18 +22,12 @@ function crearComponente(servicio) {
           </div>
           `;
 }
-
-
-
-
 $("#btn-turno").click(function() {
     $.post("https://jsonplaceholder.typicode.com/posts", seleccionados,function(data, status, jqxhr)  { 
         alert('status: ' + status + ' data: ' + JSON.stringify(data))
     }, "json"      
     )
 });
-
-
 const carritoServicios = $(".carritoServicios")
 const totalCarrito = document.getElementById("totalCarrito")
 
@@ -46,28 +39,26 @@ function agregarServicio (id){
     seleccionados.push(encontrado);
     
     //Salida para el usuario
-    $("#servicio").empty();
-    carritoServicios.empty();
-    let total = 0
-    for (const agregado of seleccionados){
-        total = total + agregado.precio;
-          $("#servicio").append(`<p>Agregado ${agregado.nombre} Precio $ ${agregado.precio}</p>
-                                `);
-                                
-          agregarFilaAlcarritoServicios(agregado);
- }
- 
- totalCarrito.innerHTML = `$${total}`;
-    $("#servicio").append(`<p>Presupuesto Total: $${total}</p>`);
-    $("#servicio").slideDown();
-       
+    actualizarCarrito();
 };
 
-$("#dropdownMenuButton1").click(function (e){
-    $("#servicio").toggle();
-});
-{/* <button class="btnDelete">Quitar</button> */}
+function actualizarCarrito() {
+  carritoServicios.empty();
+  let total = 0;
+  for (const agregado of seleccionados) {
+    total = total + agregado.precio;
+    agregarFilaAlcarritoServicios(agregado);
+  }
+  totalCarrito.innerHTML = `$${total}`;
+ }
 
+function quitarServicio(id) {
+  let encontrado = seleccionados.find(function(elemento){return elemento.id == id});
+    if (encontrado){
+      seleccionados.pop(encontrado);
+      actualizarCarrito();
+  }
+}
 function agregarFilaAlcarritoServicios(agregado) {
   const filaServicios = document.createElement('div');
   const contenidoFilaServicios = `
@@ -88,7 +79,7 @@ function agregarFilaAlcarritoServicios(agregado) {
                         class="shopping-cart-quantity d-flex justify-content-between align-items-center h-100 border-bottom pb-2 pt-3">
                         <h6 class="shopping-cart-quantity shoppingCartItemQuantity" type="number"
                             value="1">
-                        <button class="btn btn-danger buttonDelete" type="button">X</button>
+                        <button class="btn btn-danger buttonDelete" id=${agregado.id} onclick="quitarServicio(this.id)" type="button">X</button>
                     </div>
                 </div>
             </div>`;
