@@ -45,20 +45,7 @@
                 </ul>
             </header>
             <h2 class="titulo__seccion"> NUESTROS SERVICIOS </h2>
-  <h1>MTH CAR DETAIL</h1>
-
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-        aria-expanded="false">
-        SERVICIOS SELECCIONADOS
-    </button>
-    <div id="servicio" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-    </div>
-</div>
-<br>
-<div> 
-<button class="btn btn-secondary" id="btn-turno" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Reservar Turno</button>
-</div>
+ 
 
 <div id="contenidoServicios" class="row row-cols-1 row-cols-md-4 g-8"" class=" col">
 </div>
@@ -92,8 +79,7 @@
                 <div class="shopping-cart-total d-flex align-items-center">
                     <p class="mb-0">Total</p>
                     <p id="totalCarrito" class="ml-4 mb-0 ">$0</p>
-                    <div class="toast ml-auto bg-info" role="alert" aria-live="assertive" aria-atomic="true"
-                        data-delay="2000">
+                    <div class="toast ml-auto bg-info" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
                         <div class="toast-header">
                             <span>✅</span>
                             <strong class="mr-auto ml-1 text-secondary">Elemento en el carrito</strong>
@@ -105,8 +91,11 @@
                             Se aumentó correctamente la cantidad
                         </div>
                     </div>
-                    <button class="btn btn-success ml-auto comprarButton" type="button" data-toggle="modal"
+                    <button class="btn btn-success ml-auto" id="btn-turno" type="button" data-toggle="modal"
                         data-target="#comprarModal">Reservar Turno</button>
+                </div>
+                <div class="d-flex align-items-center">
+                    <p class="mb-0" id="idNotificacion"></p>
                 </div>
             </div>
         </div>
