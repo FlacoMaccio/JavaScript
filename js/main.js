@@ -22,16 +22,27 @@ function crearComponente(servicio) {
           </div>
           `;
 }
-$("#btn-turno").click(function () {
-  $.post(
-    "https://jsonplaceholder.typicode.com/posts",
-    seleccionados,
-    notificarTurnoLimpiarCarrtito,
-    "json"
-  );
-});
+
+
 const carritoServicios = $(".carritoServicios")
 const totalCarrito = document.getElementById("totalCarrito")
+const btnTurno = document.getElementById("btn-turno")
+
+
+
+btnTurno.onclick = function (){
+  if (totalCarrito.innerText == "$0") {
+    alert("DEBE SELECCIONAR UN SERVISIO PARA RESERVAR TURNO");
+  } else {
+    $.post(
+      "https://jsonplaceholder.typicode.com/posts",
+      seleccionados,
+      notificarTurnoLimpiarCarrtito,
+      "json"
+    )
+  }
+};
+
 
 function notificarTurnoLimpiarCarrtito(data, status, jqxhr) {
     notificar(`Turno reservado con exito. Su numero es: ${data.id}`);
@@ -39,8 +50,6 @@ function notificarTurnoLimpiarCarrtito(data, status, jqxhr) {
     actualizarCarrito();
   
 }
-
-
 
 function agregarServicio (id){
     if (seleccionados.find(function(elemento){return elemento.id == id})){
@@ -50,7 +59,6 @@ function agregarServicio (id){
     seleccionados.push(encontrado);
     
     notificar("");
-    //Salida para el usuario
     actualizarCarrito();
 };
 
