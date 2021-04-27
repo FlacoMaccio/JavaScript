@@ -1,9 +1,12 @@
 let listaServicios = [];
 let seleccionados = [];
 
+let nombresServiciosSeleccionados = JSON.parse(localStorage.getItem("serviciosAgregados"));
 let numeroTurnoReservado = localStorage.getItem("numeroTurno");
 if (numeroTurnoReservado != null) {
-  notificar(`Usted ya posee un turno. Su numero ${numeroTurnoReservado}`);
+  notificar(
+    `Usted ya posee un turno. Su numero ${numeroTurnoReservado}, con los siguientes servicios: ${nombresServiciosSeleccionados}`
+  );
 }
 
 const data =
@@ -39,21 +42,35 @@ btnTurno.onclick = function () {
   if (totalCarrito.innerText == "$0") {
     notificar("Debe seleccionar un servicio para reservar turno");
   } else {
-    $.post(
-      "https://jsonplaceholder.typicode.com/posts",
-      seleccionados,
-      notificarTurnoLimpiarCarrtito,
-      "json"
-    );
+    $.ajax({
+      url: "https://jsonplaceholder.typicode.com/posts",
+      type: "POST",
+      data: JSON.stringify(seleccionados),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: notificarTurnoLimpiarCarrtito,
+    });
   }
 };
 
 function notificarTurnoLimpiarCarrtito(data, status, jqxhr) {
   notificar(`Turno reservado con exito. Su numero es: ${data.id}`);
   localStorage.setItem("numeroTurno", data.id);
+  let nombresServiciosSeleccionados = obtenerNombreServiciosSeleccionados(data);
+  localStorage.setItem("serviciosAgregados",JSON.stringify(nombresServiciosSeleccionados));
   seleccionados = [];
   actualizarCarrito();
 }
+
+function obtenerNombreServiciosSeleccionados(data) {
+  let nombresServiciosSeleccionados = [];
+  for (const [key, value] of Object.entries(data)) {
+    if (key != "id") {
+      nombresServiciosSeleccionados.push(value.nombre);
+    }
+  }
+  return nombresServiciosSeleccionados;
+};
 
 function agregarServicio(id) {
   if (
