@@ -1,14 +1,16 @@
 let listaServicios = [];
 let seleccionados = [];
 
+//Notificamos en caso de que ya tenga un turno con numero id y servicios seleccionados.
 let nombresServiciosSeleccionados = JSON.parse(localStorage.getItem("serviciosAgregados"));
 let numeroTurnoReservado = localStorage.getItem("numeroTurno");
 if (numeroTurnoReservado != null) {
   notificar(
-    `Usted ya posee un turno. Su numero ${numeroTurnoReservado}, con los siguientes servicios: ${nombresServiciosSeleccionados}`
+    `Usted ya posee un turno. Su número ${numeroTurnoReservado}, con los siguientes servicios: ${nombresServiciosSeleccionados}`
   );
 }
 
+//Obtenemos los datos del json
 const data =
   "https://raw.githubusercontent.com/FlacoMaccio/JavaScript/main/data/data.json";
 $(document).ready(function () {
@@ -20,6 +22,7 @@ $(document).ready(function () {
   });
 });
 
+//Se crean los componentes "servicios"
 function crearComponente(servicio) {
   return `<div class="card mb-3">
               <img src="${servicio.imagen}" class="card-img-top" ;>
@@ -38,10 +41,15 @@ const carritoServicios = $(".carritoServicios");
 const totalCarrito = document.getElementById("totalCarrito");
 const btnTurno = document.getElementById("btn-turno");
 
+/*Evento click al boton "Reservar turno"*/
 btnTurno.onclick = function () {
+   /*Se notifica al usuario que debe seleccionar 
+    un servicio para poder reservar turno.*/
   if (totalCarrito.innerText == "$0") {
-    notificar("Debe seleccionar un servicio para reservar turno");
+      notificar("Debe seleccionar un servicio para reservar turno");
   } else {
+    /* Se confirma el turno con numero id, se guarda la info en localstorage,
+    se vacia el carrito para un nuevo presupuesto*/
     $.ajax({
       url: "https://jsonplaceholder.typicode.com/posts",
       type: "POST",
@@ -54,7 +62,7 @@ btnTurno.onclick = function () {
 };
 
 function notificarTurnoLimpiarCarrtito(data, status, jqxhr) {
-  notificar(`Turno reservado con exito. Su numero es: ${data.id}`);
+  notificar(`Turno reservado con éxito. Su número es: ${data.id}`);
   localStorage.setItem("numeroTurno", data.id);
   let nombresServiciosSeleccionados = obtenerNombreServiciosSeleccionados(data);
   localStorage.setItem("serviciosAgregados",JSON.stringify(nombresServiciosSeleccionados));
@@ -78,7 +86,7 @@ function agregarServicio(id) {
       return elemento.id == id;
     })
   ) {
-    return; //si el elemento ya esta seleccionado salgo de la funcion.
+    return;
   }
   let encontrado = listaServicios.find(function (elemento) {
     return elemento.id == id;
@@ -102,7 +110,7 @@ function actualizarCarrito() {
   }
   totalCarrito.innerHTML = `$${total}`;
 }
-
+/*Eliminamos servicios del carrito */
 function quitarServicio(id) {
   let encontrado = seleccionados.find(function (elemento) {
     return elemento.id == id;
@@ -112,7 +120,7 @@ function quitarServicio(id) {
     actualizarCarrito();
   }
 }
-
+/*Visualizamos los servicios agregados en el carrito */
 function agregarFilaAlcarritoServicios(agregado) {
   const filaServicios = document.createElement("div");
   const contenidoFilaServicios = `
