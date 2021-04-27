@@ -1,6 +1,13 @@
 let listaServicios = [];
-let seleccionados= [];
-const data = "https://raw.githubusercontent.com/FlacoMaccio/JavaScript/main/data/data.json"
+let seleccionados = [];
+
+let numeroTurnoReservado = localStorage.getItem("numeroTurno");
+if (numeroTurnoReservado != null) {
+  notificar(`Usted ya posee un turno. Su numero ${numeroTurnoReservado}`);
+}
+
+const data =
+  "https://raw.githubusercontent.com/FlacoMaccio/JavaScript/main/data/data.json";
 $(document).ready(function () {
   $.getJSON(data, function (datos, estado) {
     listaServicios = datos;
@@ -9,6 +16,7 @@ $(document).ready(function () {
     }
   });
 });
+
 function crearComponente(servicio) {
   return `<div class="card mb-3">
               <img src="${servicio.imagen}" class="card-img-top" ;>
@@ -23,44 +31,46 @@ function crearComponente(servicio) {
           `;
 }
 
+const carritoServicios = $(".carritoServicios");
+const totalCarrito = document.getElementById("totalCarrito");
+const btnTurno = document.getElementById("btn-turno");
 
-const carritoServicios = $(".carritoServicios")
-const totalCarrito = document.getElementById("totalCarrito")
-const btnTurno = document.getElementById("btn-turno")
-
-
-
-btnTurno.onclick = function (){
+btnTurno.onclick = function () {
   if (totalCarrito.innerText == "$0") {
-    alert("DEBE SELECCIONAR UN SERVISIO PARA RESERVAR TURNO");
+    notificar("Debe seleccionar un servicio para reservar turno");
   } else {
     $.post(
       "https://jsonplaceholder.typicode.com/posts",
       seleccionados,
       notificarTurnoLimpiarCarrtito,
       "json"
-    )
+    );
   }
 };
 
-
 function notificarTurnoLimpiarCarrtito(data, status, jqxhr) {
-    notificar(`Turno reservado con exito. Su numero es: ${data.id}`);
-    seleccionados = [];
-    actualizarCarrito();
-  
+  notificar(`Turno reservado con exito. Su numero es: ${data.id}`);
+  localStorage.setItem("numeroTurno", data.id);
+  seleccionados = [];
+  actualizarCarrito();
 }
 
-function agregarServicio (id){
-    if (seleccionados.find(function(elemento){return elemento.id == id})){
-      return; //si el elemento ya esta seleccionado salgo de la funcion.
-    }
-    let encontrado = listaServicios.find(function(elemento){return elemento.id == id});
-    seleccionados.push(encontrado);
-    
-    notificar("");
-    actualizarCarrito();
-};
+function agregarServicio(id) {
+  if (
+    seleccionados.find(function (elemento) {
+      return elemento.id == id;
+    })
+  ) {
+    return; //si el elemento ya esta seleccionado salgo de la funcion.
+  }
+  let encontrado = listaServicios.find(function (elemento) {
+    return elemento.id == id;
+  });
+  seleccionados.push(encontrado);
+
+  notificar("");
+  actualizarCarrito();
+}
 
 function notificar(texto) {
   document.getElementById("idNotificacion").innerHTML = texto;
@@ -74,22 +84,24 @@ function actualizarCarrito() {
     agregarFilaAlcarritoServicios(agregado);
   }
   totalCarrito.innerHTML = `$${total}`;
- }
+}
 
 function quitarServicio(id) {
-  let encontrado = seleccionados.find(function(elemento){return elemento.id == id});
-    if (encontrado){
-      seleccionados.pop(encontrado);
-      actualizarCarrito();
+  let encontrado = seleccionados.find(function (elemento) {
+    return elemento.id == id;
+  });
+  if (encontrado) {
+    seleccionados.pop(encontrado);
+    actualizarCarrito();
   }
 }
+
 function agregarFilaAlcarritoServicios(agregado) {
-  const filaServicios = document.createElement('div');
+  const filaServicios = document.createElement("div");
   const contenidoFilaServicios = `
           <div class="row shoppingCartItem">
                 <div class="col-6">
                     <div class="shopping-cart-item d-flex align-items-center h-100 border-bottom pb-2 pt-3">
-                        
                         <h6 class="shopping-cart-item-title shoppingCartItemTitle text-truncate ml-3 mb-0">${agregado.nombre}</h6>
                     </div>
                 </div>
